@@ -9,10 +9,9 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import { app, server } from "./lib/socket.js";
 
-// Load env variables
+// Load environment variables
 dotenv.config();
 
-// PORT
 const PORT = process.env.PORT || 5001;
 
 // Middleware
@@ -20,7 +19,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend dev URL
+    origin: "*", // change later if needed
     credentials: true,
   })
 );
@@ -29,16 +28,23 @@ app.use(
 app.use("/api/auth", authRoutes);
 app.use("/api/message", messageRoutes);
 
-// ================= PRODUCTION FRONTEND =================
+// Health check
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend is running 🚀" });
+});
+
+/* ============================
+   SERVE FRONTEND (PRODUCTION)
+   ============================ */
 if (process.env.NODE_ENV === "production") {
-  // VERY IMPORTANT PART 👇
-  // backend/src -> backend -> root
-  const ROOT_DIR = path.resolve(process.cwd(), "..");
-  const FRONTEND_DIST = path.join(ROOT_DIR, "frontend", "dist");
+  // IMPORTANT: backend -> ../frontend/dist
+  const FRONTEND_DIST = path.resolve(process.cwd(), "..", "frontend", "dist");
+
+  console.log("Serving frontend from:", FRONTEND_DIST);
 
   app.use(express.static(FRONTEND_DIST));
 
-  // SPA fallback
+  // SPA fallback (Express 5 safe)
   app.use((req, res) => {
     res.sendFile(path.join(FRONTEND_DIST, "index.html"));
   });
