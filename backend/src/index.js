@@ -6,13 +6,16 @@ import cookieParser from "cookie-parser"
 import cors from "cors"
 
 import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import { connectDB } from "./lib/db.js";
 
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js"
 import { app, server } from "./lib/socket.js";
 
-const __dirname = path.resolve(); 
+
 
 dotenv.config()
 
@@ -37,7 +40,7 @@ app.get("/", (req, res) => {
 if(process.env.NODE_ENV==="production"){
     app.use(express.static(path.join(__dirname,"../frontend/dist")))
 
-    app.get("*", (req, res) => {
+    app.get("/*", (req, res) => {
         res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"))
     })
 }
