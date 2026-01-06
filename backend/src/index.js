@@ -33,11 +33,11 @@ app.get("/api/test", (req, res) => {
 
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
-    app.use(express.static(path.join(__dirname, "../frontend/dist")));
+    app.use(express.static(path.resolve("./frontend/dist")));
 
-    // SPA fallback: serve index.html for all unmatched routes
+    // SPA fallback
     app.use((req, res) => {
-        res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+        res.sendFile(path.resolve("./frontend/dist/index.html"));
     });
 }
 
