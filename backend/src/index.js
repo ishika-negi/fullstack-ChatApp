@@ -12,6 +12,7 @@ import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js"
 import { app, server } from "./lib/socket.js";
 
+const __dirname = path.resolve(); 
 
 dotenv.config()
 
@@ -42,7 +43,7 @@ if(process.env.NODE_ENV==="production"){
 }
 
 const PORT = process.env.PORT
-const __dirname = path.resolve();
+
 
 server.listen(PORT, ()=> {
     console.log("server is running on PORT:"+ PORT);
